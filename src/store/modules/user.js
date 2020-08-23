@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, getMembers, addMember, deleteMember, updateMember } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -7,7 +7,7 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
 }
 
 const mutations = {
@@ -75,6 +75,47 @@ const actions = {
       })
     })
   },
+
+  getMembers({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      getMembers(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error);
+      })
+    })
+  },
+
+  addMember({ commit, state }, member) {
+    return new Promise((resolve, reject) => {
+      addMember(member).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error);
+      })
+    })
+  },
+
+  deleteMember({ commit, state }, memberId) {
+    return new Promise((resolve, reject) => {
+      deleteMember(memberId).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error);
+      })
+    })
+  },
+
+  updateMember({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      updateMember(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error);
+      })
+    })
+  },
+
 
   // user logout
   logout({ commit, state, dispatch }) {
