@@ -6,17 +6,18 @@
           <el-button type="primary" plain @click="addMember">新增会员</el-button>
         </div>
         <el-table :data="tableData" border>
+          <el-table-column prop="id" label="id" />
           <el-table-column label="姓名">
             <template scope="scope">
-              <span class="link-type" @click="showMemberDetail(scope.row)">{{scope.row.name}}</span>
+              <span class="link-type" @click="showMemberDetail(scope.row)">{{ scope.row.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="nickname" label="昵称"></el-table-column>
-          <el-table-column prop="gender" label="性别" :formatter="formatGender"></el-table-column>
-          <el-table-column prop="age" label="年龄"></el-table-column>
+          <el-table-column prop="nickname" label="昵称" />
+          <el-table-column prop="gender" label="性别" :formatter="formatGender" />
+          <el-table-column prop="age" label="年龄" />
           <el-table-column label="创建时间">
             <template scope="scope">
-              <span>{{scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+              <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作" width="150">
@@ -27,58 +28,60 @@
           </el-table-column>
         </el-table>
         <el-pagination
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
           :current-page.sync="pagination.page"
           layout="total, sizes, prev, pager, next"
           :page-sizes="[10,20,30, 50]"
           :page-size.sync="pagination.limit"
           :total="pagination.total"
-        ></el-pagination>
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+        />
         <add-user
-          :isEdit.sync="isEdit"
-          :isShow.sync="isShowAddUserDialog"
-          :memberDetail="memberDetail"
+          :is-edit.sync="isEdit"
+          :is-show.sync="isShowDialog"
+          :member-detail="memberDetail"
+          :member-id="memberId"
           @closeDialog="closeAddDialog"
-        ></add-user>
+        />
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import AddUser from "@/new-views/members/user/add/AddUser";
-import { parseTime } from "@/utils";
+import AddUser from '@/new-views/members/user/add/AddUser'
+import { parseTime } from '@/utils'
 export default {
-  name: "userPage",
+  name: 'UserPage',
   components: {
-    AddUser,
+    AddUser
   },
   data() {
     return {
       tableData: [],
       isEdit: false,
-      isShowAddUserDialog: false,
+      isShowDialog: false,
       memberDetail: {},
+      memberId: '',
       pagination: {
         total: 0,
         page: 1,
-        limit: 10,
-      },
-    };
+        limit: 10
+      }
+    }
   },
   computed: {},
   created() {
-    this.init();
+    this.init()
   },
   methods: {
     init() {
-      let params = {
+      const params = {
         page: this.pagination.page,
-        limit: this.pagination.limit,
-      };
-      this.$store.dispatch("user/getMembers", params).then((response) => {
-        let { count, data } = response;
+        limit: this.pagination.limit
+      }
+      this.$store.dispatch('user/getMembers', params).then((response) => {
+        const { count, data } = response
         this.tableData = data.map((item) => {
           return {
             id: item.id,
@@ -87,14 +90,13 @@ export default {
             gender: item.gender,
             age: item.age,
             mobile: item.mobile,
-            createTime: item.create_time,
-          };
-        });
-        this.pagination.total = count;
-      });
+            createTime: item.create_time
+          }
+        })
+        this.pagination.total = count
+      })
     },
     editMember(row) {
-      let memberId = row.id;
       // 设置展示的详情
       this.memberDetail = {
         id: row.id,
@@ -102,48 +104,50 @@ export default {
         nickname: row.nickname,
         gender: row.gender,
         age: row.age,
-        mobile: row.mobile,
-      };
-      this.isEdit = true;
-      this.isShowAddUserDialog = true;
+        mobile: row.mobile
+      }
+      this.memberId = row.id
+      this.isEdit = true
+      this.isShowDialog = true
     },
     delMember(row) {
-      let memberId = row.id;
-      this.$alert("确定要删除吗", "删除", {
-        confirmButtonText: "确定",
+      const memberId = row.id
+      this.$alert('确定要删除吗', '删除', {
+        confirmButtonText: '确定',
         callback: (action) => {
-          this.$store.dispatch("user/deleteMember", memberId).then((data) => {
-            this.$message.success("删除成功");
-            this.pagination.page = 1;
-            this.init();
-          });
-        },
-      });
+          this.$store.dispatch('user/deleteMember', memberId).then((data) => {
+            this.$message.success('删除成功')
+            this.pagination.page = 1
+            this.init()
+          })
+        }
+      })
     },
     addMember() {
-      this.isEdit = false;
-      this.isShowAddUserDialog = true;
+      this.isEdit = false
+      this.memberId = ''
+      this.isShowDialog = true
     },
     closeAddDialog(event) {
-      this.isShowAddUserDialog = false;
-      this.init();
+      this.isShowDialog = false
+      this.init()
     },
     formatGender(row) {
-      let val = Number(row.gender);
-      return val === 1 ? "男" : val === 2 ? "女" : "";
+      const val = Number(row.gender)
+      return val === 1 ? '男' : val === 2 ? '女' : ''
     },
     handleCurrentChange(event) {
-      this.init();
+      this.init()
     },
     handleSizeChange(event) {
-      this.init();
+      this.init()
     },
     showMemberDetail(row) {
-      let memberId = row.id;
-      console.log("查看该会员的详情", memberId);
-    },
-  },
-};
+      const memberId = row.id
+      console.log('查看该会员的详情', memberId)
+    }
+  }
+}
 </script>
 
 <style lang="scss">

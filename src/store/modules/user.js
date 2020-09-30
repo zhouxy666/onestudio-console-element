@@ -1,13 +1,14 @@
-import { login, logout, getInfo, getMembers, addMember, deleteMember, updateMember } from '@/api/user'
+import { login, logout, getInfo, getMembers, getMember, addMember, deleteMember, updateMember, getGrades, getGrade, updateGrade, deleteGrade, createGrade } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import { param } from '@/utils'
 
 const state = {
   token: getToken(),
   name: '',
   avatar: '',
   introduction: '',
-  roles: [],
+  roles: []
 }
 
 const mutations = {
@@ -81,7 +82,17 @@ const actions = {
       getMembers(params).then(data => {
         resolve(data)
       }).catch(error => {
-        reject(error);
+        reject(error)
+      })
+    })
+  },
+
+  getMember({ commit, state }, memberId) {
+    return new Promise((resolve, reject) => {
+      getMember(memberId).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
       })
     })
   },
@@ -91,7 +102,7 @@ const actions = {
       addMember(member).then(data => {
         resolve(data)
       }).catch(error => {
-        reject(error);
+        reject(error)
       })
     })
   },
@@ -101,7 +112,7 @@ const actions = {
       deleteMember(memberId).then(data => {
         resolve(data)
       }).catch(error => {
-        reject(error);
+        reject(error)
       })
     })
   },
@@ -111,11 +122,30 @@ const actions = {
       updateMember(params).then(data => {
         resolve(data)
       }).catch(error => {
-        reject(error);
+        reject(error)
       })
     })
   },
 
+  getGrades({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      getGrades(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getGrade({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      getGrade(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 
   // user logout
   logout({ commit, state, dispatch }) {

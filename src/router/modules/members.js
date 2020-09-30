@@ -20,6 +20,12 @@ const memberRouter = {
       component: () => import('@/new-views/members/user/UserPage.vue'),
       name: 'userInfo',
       meta: { title: '用户信息' }
+    },
+    {
+      path: 'grade',
+      component: () => import('@/new-views/members/user/GradePage.vue'),
+      name: 'gradeInfo',
+      meta: { title: '班级信息' }
     }
   ]
 }
