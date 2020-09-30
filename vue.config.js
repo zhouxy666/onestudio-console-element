@@ -30,13 +30,31 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
-    port: port,
-    open: true,
+    port,
+    open: false,
     overlay: {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    // proxy: {
+    //   [process.env.VUE_APP_BASE_API]: {
+    //     target: `http://127.0.0.1:5000`,
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       ['^' + process.env.VUE_APP_BASE_API]: ''
+    //     }
+    //   }
+    // },
+    proxy: {
+      '/dev-api/v1': {
+        target: `http://127.0.0.1:5000`,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/dev-api/v1': '/v1'
+        }
+      }
+    },
+    after: require('./mock/mock-server.js')
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
@@ -88,7 +106,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()
