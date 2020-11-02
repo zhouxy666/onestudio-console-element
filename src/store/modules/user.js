@@ -1,7 +1,8 @@
 import {
   login, logout, getInfo,
   getMembers, getMember, addMember, deleteMember, updateMember, searchMember,
-  getGrades, getGrade, updateGrade, deleteGrade, createGrade, bindMembers, unBindMembers
+  getGrades, getGrade, updateGrade, deleteGrade, createGrade, bindMembers, unBindMembers,
+  bindGrades, unBindGrades
 } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
@@ -204,6 +205,26 @@ const actions = {
   bindMembers({ commit, state }, params) {
     return new Promise((resolve, reject) => {
       bindMembers(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  bindGrades({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      bindGrades(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  unBindGrades({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      unBindGrades(params).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)

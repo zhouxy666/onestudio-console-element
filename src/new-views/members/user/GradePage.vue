@@ -17,7 +17,12 @@
             </template>-->
           </el-table-column>
           <el-table-column sortable prop="week" label="星期" width="100" />
-          <el-table-column sortable prop="startTime" label="开始时间" width="200" />
+          <el-table-column
+            sortable
+            prop="startTime"
+            label="开始时间"
+            width="200"
+          />
           <el-table-column prop="endTime" label="结束时间" width="200" />
           <el-table-column prop="members" label="学生">
             <template scope="scope">
@@ -155,8 +160,8 @@ export default {
           memberIds,
         })
         .then((response) => {
+          this.pagination.page = 1;
           this.init();
-          console.log(response);
         });
     },
     closeAddDialog(event) {

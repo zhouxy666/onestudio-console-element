@@ -51,6 +51,7 @@ export function searchMember(params) {
   })
 }
 
+
 export function addMember(data) {
   return request({
     url: '/v1/members',
@@ -141,6 +142,26 @@ export function bindMembers(params) {
     method: 'post',
     data: {
       'member_ids': params.memberIds
+    }
+  })
+}
+
+export function unBindGrades(params) {
+  return request({
+    url: `/v1/members/un_bind_grades/${params.memberId}`,
+    method: 'post',
+    data: {
+      'grade_ids': params.gradeIds
+    }
+  })
+}
+
+export function bindGrades(params) {
+  return request({
+    url: `/v1/members/bind_grades/${params.memberId}`,
+    method: 'post',
+    data: {
+      'grade_ids': params.gradeIds
     }
   })
 }

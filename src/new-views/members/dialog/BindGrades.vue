@@ -3,24 +3,24 @@
     <el-dialog :visible="isShow" @close="close" width="40%">
       <div slot="title">
         <div class="el-icon-share title-icon">
-          <span class="title-font">添加学生</span>
+          <span class="title-font">分配班级</span>
         </div>
       </div>
       <div class="bind-content">
-        <span class="label">添加学生</span>
+        <span class="label">分配班级</span>
         <el-select
           class="bind-input"
-          v-model="state.selectMembers"
+          v-model="state.selectGrades"
           multiple
           filterable
           remote
           reserve-keyword
-          placeholder="输入学生姓名"
-          :remote-method="queryMembers"
+          placeholder="输入班级"
+          :remote-method="queryGrades"
           :loading="loading"
         >
           <el-option
-            v-for="sup in state.supportMembers"
+            v-for="sup in state.supportGrades"
             :key="sup.value"
             :label="sup.label"
             :value="sup.value"
@@ -40,19 +40,19 @@ import { reactive, ref, onMounted, watch } from "@vue/composition-api";
 export default {
   props: {
     isShow: Boolean,
-    gradeId: String | Number,
+    memberId: String | Number,
   },
   setup(props, context) {
     const loading = ref(false);
     const state = reactive({
-      selectMembers: [],
-      supportMembers: [],
+      selectGrades: [],
+      supportGrades: [],
     });
     watch(
-      () => props.gradeId,
+      () => props.memberId,
       (newGradeId) => {
-        state.selectMembers = [];
-        state.supportMembers = [];
+        state.selectGrades = [];
+        state.supportGrades = [];
       }
     );
 
@@ -62,34 +62,29 @@ export default {
 
     function submit() {
       this.$store
-        .dispatch("user/bindMembers", {
-          gradeId: props.gradeId,
-          memberIds: state.selectMembers.join(","),
+        .dispatch("user/bindGrades", {
+          memberId: props.memberId,
+          gradeIds: state.selectGrades.join(","),
         })
         .then((response) => {
           close();
           this.$message({
-            message: "添加成功",
+            message: "分班成功",
             type: "success",
           });
         });
     }
 
-    function queryMembers(content) {
-      console.log(content);
-      this.$store
-        .dispatch("user/searchMember", {
-          name: content,
-        })
-        .then((response) => {
-          const { count, data } = response;
-          state.supportMembers = data.map((item) => {
-            return {
-              value: item.id,
-              label: item.name,
-            };
-          });
+    function queryGrades() {
+      this.$store.dispatch("user/getGrades").then((response) => {
+        const { count, data } = response;
+        state.supportGrades = data.map((item) => {
+          return {
+            value: item.id,
+            label: item.grade_name,
+          };
         });
+      });
     }
 
     return {
@@ -97,7 +92,7 @@ export default {
       state,
       close,
       submit,
-      queryMembers,
+      queryGrades,
     };
   },
 };
