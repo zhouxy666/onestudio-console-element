@@ -3,34 +3,68 @@
     <el-row>
       <el-col :span="24">
         <div class="table-tool">
-          <el-button type="primary" plain @click="addMember">新增会员</el-button>
+          <el-button type="primary" plain @click="addMember"
+            >新增会员</el-button
+          >
         </div>
         <el-table :data="tableData" border>
-          <el-table-column prop="id" label="id" />
-          <el-table-column label="姓名">
+          <el-table-column prop="id" label="id" width="150" />
+          <el-table-column label="姓名" width="200">
             <template scope="scope">
-              <span class="link-type" @click="showMemberDetail(scope.row)">{{ scope.row.name }}</span>
+              <span class="link-type" @click="showMemberDetail(scope.row)">{{
+                scope.row.name
+              }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="nickname" label="昵称" />
-          <el-table-column prop="gender" label="性别" :formatter="formatGender" />
-          <el-table-column prop="age" label="年龄" />
-          <el-table-column label="创建时间">
+          <el-table-column prop="nickname" label="昵称" width="200" />
+          <el-table-column
+            prop="gender"
+            label="性别"
+            :formatter="formatGender"
+            width="150"
+          />
+          <el-table-column prop="age" label="年龄" width="200" />
+          <el-table-column label="创建时间" width="250">
             <template scope="scope">
-              <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+              <span>{{
+                scope.row.createTime | parseTime("{y}-{m}-{d} {h}:{i}")
+              }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="班级">
+            <template scope="scope">
+              <el-tag
+                class="tag"
+                v-for="grade in scope.row.grades"
+                :key="grade.id"
+                closable
+                @close="handleClose(scope.row, grade)"
+                >{{ grade.grade_name }}</el-tag
+              >
+              <i
+                class="el-icon-edit bind-members"
+                @click="bindGrades(scope.row)"
+              ></i>
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作" width="150">
             <template scope="scope">
-              <el-button size="small" type="success" @click="editMember(scope.row)">编辑</el-button>
-              <el-button size="small" @click="delMember(scope.row)">删除</el-button>
+              <el-button
+                size="small"
+                type="success"
+                @click="editMember(scope.row)"
+                >编辑</el-button
+              >
+              <el-button size="small" @click="delMember(scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
         <el-pagination
           :current-page.sync="pagination.page"
           layout="total, sizes, prev, pager, next"
-          :page-sizes="[10,20,30, 50]"
+          :page-sizes="[10, 20, 30, 50]"
           :page-size.sync="pagination.limit"
           :total="pagination.total"
           @current-change="handleCurrentChange"
@@ -42,46 +76,55 @@
           :member-detail="memberDetail"
           :member-id="memberId"
           @closeDialog="closeAddDialog"
-        />
+        ></add-user>
+        <bind-grades
+          :isShow.sync="isShowBindGrades"
+          :memberId="bindMemberId"
+          @closeDialog="closeAddDialog"
+        ></bind-grades>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import AddUser from '@/new-views/members/user/add/AddUser'
-import { parseTime } from '@/utils'
+import AddUser from "@/new-views/members/user/add/AddUser";
+import BindGrades from "@/new-views/members/dialog/BindGrades";
+import { parseTime } from "@/utils";
 export default {
-  name: 'UserPage',
+  name: "UserPage",
   components: {
-    AddUser
+    AddUser,
+    BindGrades,
   },
   data() {
     return {
       tableData: [],
       isEdit: false,
       isShowDialog: false,
+      isShowBindGrades: false,
+      bindMemberId: "",
       memberDetail: {},
-      memberId: '',
+      memberId: "",
       pagination: {
         total: 0,
         page: 1,
-        limit: 10
-      }
-    }
+        limit: 10,
+      },
+    };
   },
   computed: {},
   created() {
-    this.init()
+    this.init();
   },
   methods: {
     init() {
       const params = {
         page: this.pagination.page,
-        limit: this.pagination.limit
-      }
-      this.$store.dispatch('user/getMembers', params).then((response) => {
-        const { count, data } = response
+        limit: this.pagination.limit,
+      };
+      this.$store.dispatch("user/getMembers", params).then((response) => {
+        const { count, data } = response;
         this.tableData = data.map((item) => {
           return {
             id: item.id,
@@ -90,11 +133,12 @@ export default {
             gender: item.gender,
             age: item.age,
             mobile: item.mobile,
-            createTime: item.create_time
-          }
-        })
-        this.pagination.total = count
-      })
+            createTime: item.create_time,
+            grades: item.grades,
+          };
+        });
+        this.pagination.total = count;
+      });
     },
     editMember(row) {
       // 设置展示的详情
@@ -104,50 +148,70 @@ export default {
         nickname: row.nickname,
         gender: row.gender,
         age: row.age,
-        mobile: row.mobile
-      }
-      this.memberId = row.id
-      this.isEdit = true
-      this.isShowDialog = true
+        mobile: row.mobile,
+      };
+      this.memberId = row.id;
+      this.isEdit = true;
+      this.isShowDialog = true;
     },
     delMember(row) {
-      const memberId = row.id
-      this.$alert('确定要删除吗', '删除', {
-        confirmButtonText: '确定',
-        callback: (action) => {
-          this.$store.dispatch('user/deleteMember', memberId).then((data) => {
-            this.$message.success('删除成功')
-            this.pagination.page = 1
-            this.init()
-          })
-        }
+      this.$confirm("确定要删除这个学生吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
       })
+        .then(() => {
+          return this.$store.dispatch("user/deleteMember", row.id);
+        })
+        .then((response) => {
+          this.$message.success("删除成功");
+          this.pagination.page = 1;
+          this.init();
+        });
     },
     addMember() {
-      this.isEdit = false
-      this.memberId = ''
-      this.isShowDialog = true
+      this.isEdit = false;
+      this.memberId = "";
+      this.isShowDialog = true;
     },
     closeAddDialog(event) {
-      this.isShowDialog = false
-      this.init()
+      this.isShowDialog = false;
+      this.isShowBindGrades = false;
+      this.init();
     },
     formatGender(row) {
-      const val = Number(row.gender)
-      return val === 1 ? '男' : val === 2 ? '女' : ''
+      const val = Number(row.gender);
+      return val === 1 ? "男" : val === 2 ? "女" : "";
     },
     handleCurrentChange(event) {
-      this.init()
+      this.init();
     },
     handleSizeChange(event) {
-      this.init()
+      this.init();
     },
     showMemberDetail(row) {
-      const memberId = row.id
-      console.log('查看该会员的详情', memberId)
-    }
-  }
-}
+      const memberId = row.id;
+      console.log("查看该会员的详情", memberId);
+    },
+    bindGrades(row) {
+      // 需要绑定的班级
+      this.bindMemberId = row.id;
+      this.isShowBindGrades = true;
+    },
+    handleClose(row, grade) {
+      const memberId = row.id;
+      const gradeIds = grade.id;
+      this.$store
+        .dispatch("user/unBindGrades", {
+          memberId,
+          gradeIds,
+        })
+        .then((response) => {
+          this.init();
+        });
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -155,6 +219,12 @@ export default {
   padding: 20px;
   .table-tool {
     height: 50px;
+  }
+  .tag {
+    margin-right: 8px;
+  }
+  .bind-members {
+    cursor: pointer;
   }
 }
 </style>

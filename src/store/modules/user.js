@@ -1,4 +1,9 @@
-import { login, logout, getInfo, getMembers, getMember, addMember, deleteMember, updateMember, getGrades, getGrade, updateGrade, deleteGrade, createGrade } from '@/api/user'
+import {
+  login, logout, getInfo,
+  getMembers, getMember, addMember, deleteMember, updateMember, searchMember,
+  getGrades, getGrade, updateGrade, deleteGrade, createGrade, bindMembers, unBindMembers,
+  bindGrades, unBindGrades
+} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 import { param } from '@/utils'
@@ -97,6 +102,16 @@ const actions = {
     })
   },
 
+  searchMember({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      searchMember(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
   addMember({ commit, state }, member) {
     return new Promise((resolve, reject) => {
       addMember(member).then(data => {
@@ -127,6 +142,26 @@ const actions = {
     })
   },
 
+  createGrade({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      createGrade(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  updateGrade({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      updateGrade(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
   getGrades({ commit, state }, params) {
     return new Promise((resolve, reject) => {
       getGrades(params).then(data => {
@@ -140,6 +175,56 @@ const actions = {
   getGrade({ commit, state }, params) {
     return new Promise((resolve, reject) => {
       getGrade(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  deleteGrade({ commit, state }, gradeId) {
+    return new Promise((resolve, reject) => {
+      deleteGrade(gradeId).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  unBindMembers({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      unBindMembers(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  bindMembers({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      bindMembers(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  bindGrades({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      bindGrades(params).then(data => {
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  unBindGrades({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      unBindGrades(params).then(data => {
         resolve(data)
       }).catch(error => {
         reject(error)
