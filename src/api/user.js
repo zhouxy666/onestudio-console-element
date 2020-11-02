@@ -43,6 +43,14 @@ export function getMember(memberId) {
   })
 }
 
+export function searchMember(params) {
+  return request({
+    url: '/v1/members/search',
+    method: 'get',
+    params
+  })
+}
+
 export function addMember(data) {
   return request({
     url: '/v1/members',
@@ -90,22 +98,23 @@ export function getGrade(gradeId) {
 /**
  * @param {{"grade_name":"3班","week":"2", "start_time":"11:00","end_time":"12:30"}}
  */
-export function createGrade(params) {
+export function createGrade(data) {
   return request({
     url: '/v1/grade',
     method: 'post',
-    params
+    data
   })
 }
 
 /**
  *
- * @param {{"grade_name":"2班","week":"2", "start_time":"11:00","end_time":"12:30","member_ids":"16"}}
+ * @param {{"grade_id":"27","grade_name":"2班","week":"2", "start_time":"11:00","end_time":"12:30","member_ids":"16"}}
  */
-export function updateGrade(params) {
+export function updateGrade(data) {
   return request({
-    url: '/v1/grade/24',
-    method: 'put'
+    url: `/v1/grade/${data.grade_id}`,
+    method: 'put',
+    data
   })
 }
 
@@ -116,3 +125,22 @@ export function deleteGrade(gradeId) {
   })
 }
 
+export function unBindMembers(params) {
+  return request({
+    url: `/v1/grade/un_bind_members/${params.gradeId}`,
+    method: 'post',
+    data: {
+      'member_ids': params.memberIds
+    }
+  })
+}
+
+export function bindMembers(params) {
+  return request({
+    url: `/v1/grade/bind_members/${params.gradeId}`,
+    method: 'post',
+    data: {
+      'member_ids': params.memberIds
+    }
+  })
+}

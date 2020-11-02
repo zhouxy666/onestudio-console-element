@@ -6,15 +6,15 @@
           <el-button type="primary" plain @click="addMember">新增会员</el-button>
         </div>
         <el-table :data="tableData" border>
-          <el-table-column prop="id" label="id" />
+          <el-table-column prop="id" label="id"/>
           <el-table-column label="姓名">
             <template scope="scope">
               <span class="link-type" @click="showMemberDetail(scope.row)">{{ scope.row.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="nickname" label="昵称" />
-          <el-table-column prop="gender" label="性别" :formatter="formatGender" />
-          <el-table-column prop="age" label="年龄" />
+          <el-table-column prop="nickname" label="昵称"/>
+          <el-table-column prop="gender" label="性别" :formatter="formatGender"/>
+          <el-table-column prop="age" label="年龄"/>
           <el-table-column label="创建时间">
             <template scope="scope">
               <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
@@ -49,112 +49,112 @@
 </template>
 
 <script>
-import AddUser from '@/new-views/members/user/add/AddUser'
-import { parseTime } from '@/utils'
-export default {
-  name: 'UserPage',
-  components: {
-    AddUser
-  },
-  data() {
-    return {
-      tableData: [],
-      isEdit: false,
-      isShowDialog: false,
-      memberDetail: {},
-      memberId: '',
-      pagination: {
-        total: 0,
-        page: 1,
-        limit: 10
+  import AddUser from '@/new-views/members/user/add/AddUser'
+  import { parseTime } from '@/utils'
+  export default {
+    name: 'UserPage',
+    components: {
+      AddUser
+    },
+    data() {
+      return {
+        tableData: [],
+        isEdit: false,
+        isShowDialog: false,
+        memberDetail: {},
+        memberId: '',
+        pagination: {
+          total: 0,
+          page: 1,
+          limit: 10
+        }
       }
-    }
-  },
-  computed: {},
-  created() {
-    this.init()
-  },
-  methods: {
-    init() {
-      const params = {
-        page: this.pagination.page,
-        limit: this.pagination.limit
-      }
-      this.$store.dispatch('user/getMembers', params).then((response) => {
-        const { count, data } = response
-        this.tableData = data.map((item) => {
-          return {
-            id: item.id,
-            name: item.name,
-            nickname: item.nickname,
-            gender: item.gender,
-            age: item.age,
-            mobile: item.mobile,
-            createTime: item.create_time
+    },
+    computed: {},
+    created() {
+      this.init()
+    },
+    methods: {
+      init() {
+        const params = {
+          page: this.pagination.page,
+          limit: this.pagination.limit
+        }
+        this.$store.dispatch('user/getMembers', params).then((response) => {
+          const { count, data } = response
+          this.tableData = data.map((item) => {
+            return {
+              id: item.id,
+              name: item.name,
+              nickname: item.nickname,
+              gender: item.gender,
+              age: item.age,
+              mobile: item.mobile,
+              createTime: item.create_time
+            }
+          })
+          this.pagination.total = count
+        })
+      },
+      editMember(row) {
+        // 设置展示的详情
+        this.memberDetail = {
+          id: row.id,
+          name: row.name,
+          nickname: row.nickname,
+          gender: row.gender,
+          age: row.age,
+          mobile: row.mobile
+        }
+        this.memberId = row.id
+        this.isEdit = true
+        this.isShowDialog = true
+      },
+      delMember(row) {
+        const memberId = row.id
+        this.$alert('确定要删除吗', '删除', {
+          confirmButtonText: '确定',
+          callback: (action) => {
+            this.$store.dispatch('user/deleteMember', memberId).then((data) => {
+              this.$message.success('删除成功')
+              this.pagination.page = 1
+              this.init()
+            })
           }
         })
-        this.pagination.total = count
-      })
-    },
-    editMember(row) {
-      // 设置展示的详情
-      this.memberDetail = {
-        id: row.id,
-        name: row.name,
-        nickname: row.nickname,
-        gender: row.gender,
-        age: row.age,
-        mobile: row.mobile
+      },
+      addMember() {
+        this.isEdit = false
+        this.memberId = ''
+        this.isShowDialog = true
+      },
+      closeAddDialog(event) {
+        this.isShowDialog = false
+        this.init()
+      },
+      formatGender(row) {
+        const val = Number(row.gender)
+        return val === 1 ? '男' : val === 2 ? '女' : ''
+      },
+      handleCurrentChange(event) {
+        this.init()
+      },
+      handleSizeChange(event) {
+        this.init()
+      },
+      showMemberDetail(row) {
+        const memberId = row.id
+        console.log('查看该会员的详情', memberId)
       }
-      this.memberId = row.id
-      this.isEdit = true
-      this.isShowDialog = true
-    },
-    delMember(row) {
-      const memberId = row.id
-      this.$alert('确定要删除吗', '删除', {
-        confirmButtonText: '确定',
-        callback: (action) => {
-          this.$store.dispatch('user/deleteMember', memberId).then((data) => {
-            this.$message.success('删除成功')
-            this.pagination.page = 1
-            this.init()
-          })
-        }
-      })
-    },
-    addMember() {
-      this.isEdit = false
-      this.memberId = ''
-      this.isShowDialog = true
-    },
-    closeAddDialog(event) {
-      this.isShowDialog = false
-      this.init()
-    },
-    formatGender(row) {
-      const val = Number(row.gender)
-      return val === 1 ? '男' : val === 2 ? '女' : ''
-    },
-    handleCurrentChange(event) {
-      this.init()
-    },
-    handleSizeChange(event) {
-      this.init()
-    },
-    showMemberDetail(row) {
-      const memberId = row.id
-      console.log('查看该会员的详情', memberId)
     }
   }
-}
 </script>
 
 <style lang="scss">
-.user-page {
-  padding: 20px;
-  .table-tool {
-    height: 50px;
+  .user-page {
+    padding: 20px;
+    .table-tool {
+      height: 50px;
+    }
   }
-}
 </style>

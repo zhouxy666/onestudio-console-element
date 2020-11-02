@@ -1,5 +1,5 @@
 import Vue from 'vue'
-
+import VueCompositionApi from '@vue/composition-api'
 import Cookies from 'js-cookie'
 
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
@@ -37,6 +37,8 @@ Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   locale: enLang // 如果使用中文，无需设置，请删除
 })
+
+Vue.use(VueCompositionApi)
 
 Vue.prototype.$message = Element.Message
 
