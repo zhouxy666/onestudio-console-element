@@ -72,8 +72,8 @@
 </template>
 <script>
 import { param, parseTime } from "@/utils";
-import AddGrade from "@/new-views/members/user/add/AddGrade";
-import BindMembers from "@/new-views/members/dialog/BindMembers";
+import AddGrade from "@/new-views/members/grade/dialog/AddGrade";
+import BindMembers from "@/new-views/members/grade/dialog/BindMembers";
 
 export default {
   components: {
