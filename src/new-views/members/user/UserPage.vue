@@ -6,6 +6,17 @@
           <el-button type="primary" plain @click="addMember"
             >新增会员</el-button
           >
+          <el-input
+            class="searchInput"
+            v-model="searchContent"
+            placeholder="请输入内容"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="searchMember"
+            ></el-button>
+          </el-input>
         </div>
         <el-table :data="tableData" border>
           <el-table-column prop="id" label="id" width="150" />
@@ -88,8 +99,8 @@
 </template>
 
 <script>
-import AddUser from "@/new-views/members/user/add/AddUser";
-import BindGrades from "@/new-views/members/dialog/BindGrades";
+import AddUser from "@/new-views/members/user/dialog/AddUser";
+import BindGrades from "@/new-views/members/user/dialog/BindGrades";
 import { parseTime } from "@/utils";
 export default {
   name: "UserPage",
@@ -100,6 +111,7 @@ export default {
   data() {
     return {
       tableData: [],
+      searchContent: "",
       isEdit: false,
       isShowDialog: false,
       isShowBindGrades: false,
@@ -125,19 +137,22 @@ export default {
       };
       this.$store.dispatch("user/getMembers", params).then((response) => {
         const { count, data } = response;
-        this.tableData = data.map((item) => {
-          return {
-            id: item.id,
-            name: item.name,
-            nickname: item.nickname,
-            gender: item.gender,
-            age: item.age,
-            mobile: item.mobile,
-            createTime: item.create_time,
-            grades: item.grades,
-          };
-        });
+        this.tableData = this.genSrcData(data);
         this.pagination.total = count;
+      });
+    },
+    genSrcData(data = []) {
+      return data.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+          nickname: item.nickname,
+          gender: item.gender,
+          age: item.age,
+          mobile: item.mobile,
+          createTime: item.create_time,
+          grades: item.grades,
+        };
       });
     },
     editMember(row) {
@@ -184,10 +199,16 @@ export default {
       return val === 1 ? "男" : val === 2 ? "女" : "";
     },
     handleCurrentChange(event) {
-      this.init();
+      const page = event;
+      this.search(page).then(() => {
+        this.pagination.page = page;
+      });
     },
     handleSizeChange(event) {
-      this.init();
+      const limit = event;
+      this.search(this.pagination.page, limit).then(() => {
+        this.pagination.limit = limit;
+      });
     },
     showMemberDetail(row) {
       const memberId = row.id;
@@ -210,6 +231,29 @@ export default {
           this.init();
         });
     },
+    searchMember() {
+      this.search().then(() => {
+        this.pagination.page = 1;
+        this.pagination.limit = 10;
+      });
+    },
+    search(page = 1, limit = 10) {
+      return new Promise((resolve, reject) => {
+        const val = this.searchContent.trim();
+        this.$store
+          .dispatch("user/searchMember", {
+            name: val,
+            page,
+            limit,
+          })
+          .then((response) => {
+            const { data, count } = response;
+            this.tableData = this.genSrcData(data);
+            this.pagination.total = count;
+            return resolve();
+          });
+      });
+    },
   },
 };
 </script>
@@ -217,6 +261,10 @@ export default {
 <style lang="scss">
 .user-page {
   padding: 20px;
+  .searchInput {
+    width: 200px;
+    float: right;
+  }
   .table-tool {
     height: 50px;
   }

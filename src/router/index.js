@@ -10,7 +10,6 @@ import Layout from '@/layout'
 import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
-import mchInfoRouter from './modules/mchInfo'
 import memberRouter from './modules/members'
 import nestedRouter from './modules/nested'
 
@@ -80,7 +79,8 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
+        // component: () => import('@/new-views/overview/overview'),
+        name: '总览',
         meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
       }
     ]
@@ -92,7 +92,6 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  mchInfoRouter,
   memberRouter,
   { path: '*', redirect: '/404', hidden: true }
 ]

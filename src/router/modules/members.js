@@ -23,7 +23,7 @@ const memberRouter = {
     },
     {
       path: 'grade',
-      component: () => import('@/new-views/members/user/GradePage.vue'),
+      component: () => import('@/new-views/members/grade/GradePage.vue'),
       name: 'gradeInfo',
       meta: { title: '班级信息' }
     }
