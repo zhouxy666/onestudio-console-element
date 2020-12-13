@@ -46,11 +46,13 @@ module.exports = {
     //   }
     // },
     proxy: {
-      '/dev-api/v1': {
-        target: `http://127.0.0.1:5000`,
+      '/rest/v1': {
+        // target: `http://127.0.0.1:5000`,
+        // target: `http://zhouxy.cn:5000`,
+        target: process.env.NODE_ENV === 'development' ? `http://dev.zhouxy.cn:5000` : `http://zhouxy.cn:5000`,
         changeOrigin: true,
         pathRewrite: {
-          '^/dev-api/v1': '/v1'
+          '^/rest/v1': '/v1'
         }
       }
     },
