@@ -78,7 +78,7 @@ import BindMembers from "@/new-views/members/grade/dialog/BindMembers";
 export default {
   components: {
     AddGrade,
-    BindMembers,
+    BindMembers
   },
   data() {
     return {
@@ -93,8 +93,8 @@ export default {
       pagination: {
         total: 0,
         page: 1,
-        limit: 10,
-      },
+        limit: 10
+      }
     };
   },
   created() {
@@ -113,11 +113,11 @@ export default {
     init() {
       const params = {
         page: this.pagination.page,
-        limit: this.pagination.limit,
+        limit: this.pagination.limit
       };
-      this.$store.dispatch("user/getGrades", params).then((response) => {
+      this.$store.dispatch("user/getGrades", params).then(response => {
         const { count, data } = response;
-        this.tableData = data.map((item) => {
+        this.tableData = data.map(item => {
           return {
             id: item.id,
             week: item.week,
@@ -126,7 +126,7 @@ export default {
             endTime: item.end_time,
             createTime: item.create_time,
             members: item.members,
-            supports: [],
+            supports: []
           };
         });
         this.pagination.total = count;
@@ -142,12 +142,12 @@ export default {
       this.$confirm("确定要删除这个班级吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(() => {
           return this.$store.dispatch("user/deleteGrade", row.id);
         })
-        .then((response) => {
+        .then(response => {
           this.init();
         });
     },
@@ -157,9 +157,9 @@ export default {
       this.$store
         .dispatch("user/unBindMembers", {
           gradeId,
-          memberIds,
+          memberIds
         })
-        .then((response) => {
+        .then(response => {
           this.pagination.page = 1;
           this.init();
         });
@@ -168,8 +168,8 @@ export default {
       this.isShowDialog = false;
       this.isShowBindMembers = false;
       this.init();
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

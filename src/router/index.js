@@ -7,11 +7,8 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
 import memberRouter from './modules/members'
-import nestedRouter from './modules/nested'
+import courseRouter from './modules/course'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -93,6 +90,7 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   memberRouter,
+  courseRouter,
   { path: '*', redirect: '/404', hidden: true }
 ]
 const createRouter = () => new Router({
