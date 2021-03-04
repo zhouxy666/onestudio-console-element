@@ -41,7 +41,7 @@
               :picker-options="{
                 start: CONSTANT.START_TIME,
                 step: CONSTANT.STEP,
-                end: CONSTANT.END_TIME,
+                end: CONSTANT.END_TIME
               }"
             >
             </el-time-select>
@@ -54,10 +54,27 @@
                 start: CONSTANT.START_TIME,
                 step: CONSTANT.STEP,
                 end: CONSTANT.END_TIME,
-                minTime: form.startTime,
+                minTime: form.startTime
               }"
             >
             </el-time-select>
+          </el-form-item>
+          <el-form-item label="年龄段" prop="ageGroupId">
+            <el-select
+              v-model="form.ageGroupId"
+              filterable
+              remote
+              placeholder="请输入关键词"
+              :remote-method="remoteAgeGroup"
+            >
+              <el-option
+                v-for="item in ageGroupOptions"
+                :key="item.id"
+                :label="item.label"
+                :value="item.id"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -77,7 +94,7 @@ import {
   computed,
   isRef,
   watch,
-  onMounted,
+  onMounted
 } from "@vue/composition-api";
 export default {
   props: {
@@ -86,16 +103,17 @@ export default {
     gradeId: String | Number,
     gradeDetail: {
       type: Object,
-      default: {},
-    },
+      default: {}
+    }
   },
   setup(props, context) {
     const $store = context.parent.$store;
+    
     const CONSTANT = reactive({
       WEEKS: ["1", "2", "3", "4", "5", "6", "7"],
       START_TIME: "08:00",
       STEP: "00:15",
-      END_TIME: "20:00",
+      END_TIME: "20:00"
     });
 
     const form = reactive({
@@ -104,55 +122,57 @@ export default {
       week: "1",
       startTime: "",
       endTime: "",
+      ageGroupId: ""
     });
 
     const rules = reactive({
       gradeName: [
-        { required: true, message: "请输入班级名称", trigger: "blur" },
+        { required: true, message: "请输入班级名称", trigger: "blur" }
       ],
       week: [
         {
           required: true,
           message: "请输入星期",
-          trigger: "blur",
-        },
+          trigger: "blur"
+        }
       ],
       startTime: [
         {
           required: true,
           message: "请输入上课时间",
-          trigger: "blur",
+          trigger: "blur"
         },
         {
           message: "上课时间要小于下课时间",
           trigger: "blur",
-          validator: function (rule, startTime, callback) {
+          validator: function(rule, startTime, callback) {
             if (startTime < form.endTime) {
               callback();
             } else {
               callback(rule);
             }
-          },
-        },
+          }
+        }
       ],
       endTime: [
         {
           required: true,
           message: "请输入下课时间",
-          trigger: "blur",
+          trigger: "blur"
         },
         {
           message: "下课时间要大于上课时间",
           trigger: "blur",
-          validator: function (rule, endTime, callback) {
+          validator: function(rule, endTime, callback) {
             if (endTime > form.startTime) {
               callback();
             } else {
               callback(rule);
             }
-          },
-        },
+          }
+        }
       ],
+      ageGroupId: []
     });
 
     onMounted(() => {
@@ -162,10 +182,10 @@ export default {
 
     watch(
       () => props.gradeId,
-      (gradeId) => {
+      gradeId => {
         console.log("gradeId", gradeId);
         console.log("isEdit", props.isEdit);
-        $store.dispatch("user/getGrade", gradeId).then((data) => {
+        $store.dispatch("user/getGrade", gradeId).then(data => {
           const detail = data.data;
           form.id = detail.id;
           form.gradeName = detail.grade_name;
@@ -176,10 +196,29 @@ export default {
       }
     );
 
+    // 年龄段
+    let ageGroupOptions = ref([]);
+    // lodding
+    let loadding = ref(false);
+
+    function remoteAgeGroup() {
+      loadding.value = true;
+      $store.dispatch("user/queryAgeGroup").then(respone => {
+        loadding.value = false;
+        const { data } = respone;
+        console.log(ageGroupOptions)
+        ageGroupOptions.value = data.map(item => {
+          return {
+            id: item.id,
+            label: item.desc
+          };
+        });
+      });
+    }
+
     function getWeekLabel(week) {
       return `星期${week}`;
     }
-
 
     function submit() {
       console.log("submit submit");
@@ -194,8 +233,9 @@ export default {
             week: form.week,
             start_time: form.startTime,
             end_time: form.endTime,
+            age_group_id: form.ageGroupId
           };
-          $store.dispatch(actionUrl, params).then((data) => {
+          $store.dispatch(actionUrl, params).then(data => {
             let message = "新班级创建成功";
             if (this.isEdit) {
               message = "更新成功";
@@ -213,13 +253,16 @@ export default {
 
     return {
       CONSTANT,
+      ageGroupOptions,
       form,
       rules,
       getWeekLabel,
       close,
       submit,
+      remoteAgeGroup,
+      loadding,
     };
-  },
+  }
 };
 </script>
 

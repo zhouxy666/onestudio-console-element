@@ -16,6 +16,11 @@
               <span class="link-type" @click="showMemberDetail(scope.row)">{{ scope.row.name }}</span>
             </template>-->
           </el-table-column>
+          <el-table-column
+            prop="ageGroup.desc"
+            label="年龄段"
+            width="200"
+          ></el-table-column>
           <el-table-column sortable prop="week" label="星期" width="100" />
           <el-table-column
             sortable
@@ -40,15 +45,18 @@
               ></i>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="操作" width="150">
+          <el-table-column align="center" label="操作" width="220">
             <template scope="scope">
+              <el-button size="mini" @click="createCourse(scope.row)"
+                >上课</el-button
+              >
               <el-button
-                size="small"
+                size="mini"
                 type="success"
                 @click="editGrade(scope.row)"
                 >编辑</el-button
               >
-              <el-button size="small" @click="delGrade(scope.row)"
+              <el-button size="mini" @click="delGrade(scope.row)"
                 >删除</el-button
               >
             </template>
@@ -126,6 +134,7 @@ export default {
             endTime: item.end_time,
             createTime: item.create_time,
             members: item.members,
+            ageGroup: item.age_group,
             supports: []
           };
         });
@@ -168,6 +177,9 @@ export default {
       this.isShowDialog = false;
       this.isShowBindMembers = false;
       this.init();
+    },
+    createCourse() {
+      alert(1);
     }
   }
 };

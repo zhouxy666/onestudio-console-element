@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from "@/utils/request";
 
 export function login(data) {
   // return request({
@@ -7,10 +7,10 @@ export function login(data) {
   //   data
   // })
   return request({
-    url: '/v1/token',
-    method: 'post',
+    url: "/v1/token",
+    method: "post",
     data
-  })
+  });
 }
 
 // export function getInfo(token) {
@@ -22,78 +22,77 @@ export function login(data) {
 // }
 export function getInfo(token) {
   return request({
-    url: '/v1/user',
-    method: 'get',
+    url: "/v1/user",
+    method: "get",
     params: { token }
-  })
+  });
 }
 
 export function getMembers(params) {
   return request({
-    url: '/v1/members',
-    method: 'get',
+    url: "/v1/members",
+    method: "get",
     params
-  })
+  });
 }
 
 export function getMember(memberId) {
   return request({
     url: `/v1/members/${memberId}`,
-    method: 'get'
-  })
+    method: "get"
+  });
 }
 
 export function searchMember(params) {
   return request({
-    url: '/v1/members/search',
-    method: 'get',
+    url: "/v1/members/search",
+    method: "get",
     params
-  })
+  });
 }
-
 
 export function addMember(data) {
   return request({
-    url: '/v1/members',
-    method: 'post',
+    url: "/v1/members",
+    method: "post",
     data
-  })
+  });
 }
 
 export function deleteMember(memberId) {
   return request({
     url: `/v1/members/${memberId}`,
-    method: 'delete'
-  })
+    method: "delete"
+  });
 }
 
 export function updateMember(data) {
   return request({
     url: `/v1/members/${data.id}`,
-    method: 'put',
+    method: "put",
     data
-  })
+  });
 }
 
 export function logout() {
   return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
-  })
+    url: "/vue-element-admin/user/logout",
+    method: "post"
+  });
 }
 
-export function getGrades(params) {
+export function getGrades() {
   return request({
-    url: '/v1/grade',
-    method: 'get'
-  })
+    url: "/v1/grade",
+    method: "get"
+  });
 }
 
 export function getGrade(gradeId) {
   return request({
     url: `/v1/grade/${gradeId}`,
-    method: 'get'
-  })
+    method: "get"
+  });
 }
 
 /**
@@ -101,10 +100,10 @@ export function getGrade(gradeId) {
  */
 export function createGrade(data) {
   return request({
-    url: '/v1/grade',
-    method: 'post',
+    url: "/v1/grade",
+    method: "post",
     data
-  })
+  });
 }
 
 /**
@@ -114,54 +113,61 @@ export function createGrade(data) {
 export function updateGrade(data) {
   return request({
     url: `/v1/grade/${data.grade_id}`,
-    method: 'put',
+    method: "put",
     data
-  })
+  });
 }
 
 export function deleteGrade(gradeId) {
   return request({
     url: `/v1/grade/${gradeId}`,
-    method: 'delete'
-  })
+    method: "delete"
+  });
 }
 
 export function unBindMembers(params) {
   return request({
     url: `/v1/grade/un_bind_members/${params.gradeId}`,
-    method: 'post',
+    method: "post",
     data: {
-      'member_ids': params.memberIds
+      member_ids: params.memberIds
     }
-  })
+  });
 }
 
 export function bindMembers(params) {
   return request({
     url: `/v1/grade/bind_members/${params.gradeId}`,
-    method: 'post',
+    method: "post",
     data: {
-      'member_ids': params.memberIds
+      member_ids: params.memberIds
     }
-  })
+  });
 }
 
 export function unBindGrades(params) {
   return request({
     url: `/v1/members/un_bind_grades/${params.memberId}`,
-    method: 'post',
+    method: "post",
     data: {
-      'grade_ids': params.gradeIds
+      grade_ids: params.gradeIds
     }
-  })
+  });
 }
 
 export function bindGrades(params) {
   return request({
     url: `/v1/members/bind_grades/${params.memberId}`,
-    method: 'post',
+    method: "post",
     data: {
-      'grade_ids': params.gradeIds
+      grade_ids: params.gradeIds
     }
-  })
+  });
+}
+
+export function queryAgeGroup() {
+  return request({
+    url: "/v1/age_group",
+    method: "get"
+  });
 }

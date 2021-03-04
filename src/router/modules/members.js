@@ -8,7 +8,7 @@ import Layout from '@/layout'
 const memberRouter = {
   path: '/member',
   component: Layout,
-  redirect: '/table/complex-table',
+  // redirect: '/table/complex-table',
   name: 'member',
   meta: {
     title: '会员管理',

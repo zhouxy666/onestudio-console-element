@@ -50,6 +50,7 @@ module.exports = {
         // target: `http://127.0.0.1:5000`,
         // target: `http://zhouxy.cn:5000`,
         target:
+          // eslint-disable-next-line no-undef
           process.env.NODE_ENV === "development"
             ? `http://dev.zhouxy.cn:5000`
             : `http://zhouxy.cn:5000`,
