@@ -16,6 +16,11 @@
               <span class="link-type" @click="showMemberDetail(scope.row)">{{ scope.row.name }}</span>
             </template>-->
           </el-table-column>
+          <el-table-column
+            prop="ageGroup.desc"
+            label="年龄段"
+            width="200"
+          ></el-table-column>
           <el-table-column sortable prop="week" label="星期" width="100" />
           <el-table-column
             sortable
@@ -40,15 +45,18 @@
               ></i>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="操作" width="150">
+          <el-table-column align="center" label="操作" width="220">
             <template scope="scope">
+              <el-button size="mini" @click="createCourse(scope.row)"
+                >上课</el-button
+              >
               <el-button
-                size="small"
+                size="mini"
                 type="success"
                 @click="editGrade(scope.row)"
                 >编辑</el-button
               >
-              <el-button size="small" @click="delGrade(scope.row)"
+              <el-button size="mini" @click="delGrade(scope.row)"
                 >删除</el-button
               >
             </template>
@@ -78,7 +86,7 @@ import BindMembers from "@/new-views/members/grade/dialog/BindMembers";
 export default {
   components: {
     AddGrade,
-    BindMembers,
+    BindMembers
   },
   data() {
     return {
@@ -93,8 +101,8 @@ export default {
       pagination: {
         total: 0,
         page: 1,
-        limit: 10,
-      },
+        limit: 10
+      }
     };
   },
   created() {
@@ -113,11 +121,11 @@ export default {
     init() {
       const params = {
         page: this.pagination.page,
-        limit: this.pagination.limit,
+        limit: this.pagination.limit
       };
-      this.$store.dispatch("user/getGrades", params).then((response) => {
+      this.$store.dispatch("user/getGrades", params).then(response => {
         const { count, data } = response;
-        this.tableData = data.map((item) => {
+        this.tableData = data.map(item => {
           return {
             id: item.id,
             week: item.week,
@@ -126,7 +134,8 @@ export default {
             endTime: item.end_time,
             createTime: item.create_time,
             members: item.members,
-            supports: [],
+            ageGroup: item.age_group,
+            supports: []
           };
         });
         this.pagination.total = count;
@@ -142,12 +151,12 @@ export default {
       this.$confirm("确定要删除这个班级吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(() => {
           return this.$store.dispatch("user/deleteGrade", row.id);
         })
-        .then((response) => {
+        .then(response => {
           this.init();
         });
     },
@@ -157,9 +166,9 @@ export default {
       this.$store
         .dispatch("user/unBindMembers", {
           gradeId,
-          memberIds,
+          memberIds
         })
-        .then((response) => {
+        .then(response => {
           this.pagination.page = 1;
           this.init();
         });
@@ -169,7 +178,10 @@ export default {
       this.isShowBindMembers = false;
       this.init();
     },
-  },
+    createCourse() {
+      alert(1);
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

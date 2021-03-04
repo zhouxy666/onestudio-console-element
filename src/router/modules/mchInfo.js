@@ -13,12 +13,14 @@ const tableRouter = {
   },
   children: [
     {
+      icon: '/table',
       path: 'baseinfo',
       component: () => import('@/new-views/mech/base-info/BaseInfo'),
       name: 'mchInfo',
       meta: { title: '商户信息' }
     },
     {
+      icon: '/table',
       path: 'lockinfo',
       component: () => import('@/new-views/mech/lock-info/LockInfo'),
       name: 'mchLock',
