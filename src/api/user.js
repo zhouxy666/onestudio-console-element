@@ -171,3 +171,40 @@ export function queryAgeGroup() {
     method: "get"
   });
 }
+
+export function createCoursewareApi(params) {
+  return request({
+    url: "/v1/courseware",
+    method: "post",
+    data: params
+  });
+}
+
+export function getCoursewareApi() {
+  return request({
+    url: "/v1/courseware",
+    method: "get"
+  });
+}
+
+export function getCoursewareByIdApi(coursewareId) {
+  return request({
+    url: `/v1/courseware/${coursewareId}`,
+    method: "get"
+  });
+}
+
+export function updateCoursewareApi(params) {
+  return request({
+    url: `/v1/courseware/${params.coursewareId}`,
+    method: "put",
+    data: params
+  });
+}
+
+export function delCoursewareApi(coursewareId) {
+  return request({
+    url: `/v1/courseware${coursewareId}`,
+    method: "delete"
+  });
+}
