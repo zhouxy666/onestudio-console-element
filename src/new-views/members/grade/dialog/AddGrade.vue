@@ -108,7 +108,7 @@ export default {
   },
   setup(props, context) {
     const $store = context.parent.$store;
-    
+
     const CONSTANT = reactive({
       WEEKS: ["1", "2", "3", "4", "5", "6", "7"],
       START_TIME: "08:00",
@@ -175,16 +175,11 @@ export default {
       ageGroupId: []
     });
 
-    onMounted(() => {
-      console.log(props);
-      console.log(context);
-    });
+    onMounted(() => {});
 
     watch(
       () => props.gradeId,
       gradeId => {
-        console.log("gradeId", gradeId);
-        console.log("isEdit", props.isEdit);
         $store.dispatch("user/getGrade", gradeId).then(data => {
           const detail = data.data;
           form.id = detail.id;
@@ -206,7 +201,7 @@ export default {
       $store.dispatch("user/queryAgeGroup").then(respone => {
         loadding.value = false;
         const { data } = respone;
-        console.log(ageGroupOptions)
+        console.log(ageGroupOptions);
         ageGroupOptions.value = data.map(item => {
           return {
             id: item.id,
@@ -241,6 +236,8 @@ export default {
               message = "更新成功";
             }
             this.$message.success(message);
+            // 清楚form
+            clearForm();
             this.close();
           });
         }
@@ -251,6 +248,17 @@ export default {
       context.emit("closeDialog");
     };
 
+    function clearForm() {
+      Object.assign(form, {
+        id: "",
+        gradeName: "",
+        week: "1",
+        startTime: "",
+        endTime: "",
+        ageGroupId: ""
+      });
+    }
+
     return {
       CONSTANT,
       ageGroupOptions,
@@ -260,7 +268,7 @@ export default {
       close,
       submit,
       remoteAgeGroup,
-      loadding,
+      loadding
     };
   }
 };

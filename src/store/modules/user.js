@@ -17,7 +17,12 @@ import {
   unBindMembers,
   bindGrades,
   unBindGrades,
-  queryAgeGroup
+  queryAgeGroup,
+  getCoursewareApi,
+  getCoursewareByIdApi,
+  updateCoursewareApi,
+  delCoursewareApi,
+  createCoursewareApi
 } from "@/api/user";
 import { getToken, setToken, removeToken } from "@/utils/auth";
 import router, { resetRouter } from "@/router";
@@ -284,6 +289,66 @@ const actions = {
   queryAgeGroup({ commit, state }, params) {
     return new Promise((resolve, reject) => {
       queryAgeGroup()
+        .then(data => {
+          resolve(data);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  },
+
+  getCourseware({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      getCoursewareApi()
+        .then(data => {
+          resolve(data);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  },
+
+  createCourseware({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      createCoursewareApi(params)
+        .then(data => {
+          resolve(data);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  },
+
+  getCoursewareById({ commit, state }, coursewareId) {
+    return new Promise((resolve, reject) => {
+      getCoursewareByIdApi(coursewareId)
+        .then(data => {
+          resolve(data);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  },
+
+  updateCourseware({ commit, state }, params) {
+    return new Promise((resolve, reject) => {
+      updateCoursewareApi(params)
+        .then(data => {
+          resolve(data);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  },
+
+  delCourseware({ commit, state }, cwId) {
+    return new Promise((resolve, reject) => {
+      delCoursewareApi(cwId)
         .then(data => {
           resolve(data);
         })
