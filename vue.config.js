@@ -52,8 +52,8 @@ module.exports = {
         target:
           // eslint-disable-next-line no-undef
           process.env.NODE_ENV === "development"
-            ? `http://dev.zhouxy.cn:5000`
-            : `http://zhouxy.cn:5000`,
+            ? `http://dev.onestudio.fun:5000`
+            : `http://onestudio.fun:5000`,
         changeOrigin: true,
         pathRewrite: {
           "^/rest/v1": "/v1"
